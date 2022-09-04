@@ -10,6 +10,7 @@
   "dependencies": {
     "@mdi/font": "5.9.55",
     "@vuex-orm/core": "^0.36.4",
+    "@vuex-orm/plugin-axios": "^0.9.4",
     "await-to-js": "^3.0.0",
     "axios": "^0.27.2",
     "core-js": "^3.8.3",
