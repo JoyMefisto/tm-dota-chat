@@ -10,14 +10,23 @@ import {
 const routes: Array<RouteRecordRaw> = [
   {
     ...MainRoute,
+    meta: {
+      isAuthRequired: true
+    },
     component: MainView
   },
   {
     ...AuthRoute,
+    meta: {
+      isAuthRequired: false
+    },
     component: () => import(/* webpackChunkName: "auth" */ '@/views/pages/auth/index.vue')
   },
   {
     ...PersonRoute,
+    meta: {
+      isAuthRequired: true
+    },
     component: () => import(/* webpackChunkName: "person" */ '@/views/pages/person/index.vue')
   }
 ]

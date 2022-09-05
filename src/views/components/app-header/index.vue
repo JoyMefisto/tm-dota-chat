@@ -8,9 +8,10 @@
     app
   >
     <div class="app-header__container d-flex justify-space-between">
-      <div>Logo</div>
+      <router-link v-if="$route.name === MainRoute.name" :to="PersonRoute">Личный кабинет</router-link>
+      <router-link v-if="$route.name === PersonRoute.name" :to="MainRoute">Главная странциа</router-link>
       <div v-if="isAuth">
-        <span>Вы зашли под {{getUser.localized_name}}</span>
+        <span>Вы зашли под {{heroName}}</span>
         <v-btn
           class="ml-4"
           variant="outlined"
@@ -29,18 +30,26 @@
 </template>
 
 <script>
+import { get } from 'lodash'
 import User from '@/store/modules/user/model'
-import { AuthRoute } from '@/constants/router'
+import { AuthRoute, PersonRoute, MainRoute } from '@/constants/router'
+import { removeUserLogin } from '@/helpers/auth'
 
 export default {
   name: 'AppHeader',
+  data () {
+    return {
+      PersonRoute,
+      MainRoute
+    }
+  },
   computed: {
     /**
      * Пользователь зашёл под каким либо героем?
      * @returns {boolean}
      */
     isAuth () {
-      return Boolean(this.getUser)
+      return Boolean(get(this, 'getUser.hero', false))
     },
     /**
      * Получить выбранного героя
@@ -48,6 +57,9 @@ export default {
      */
     getUser () {
       return User.query().first()
+    },
+    heroName () {
+      return get(this, 'getUser.hero.localized_name')
     }
   },
   methods: {
@@ -57,6 +69,7 @@ export default {
      */
     async exit (id) {
       await User.delete(id)
+      removeUserLogin()
       this.$router.push(AuthRoute)
     }
   }

@@ -6,10 +6,13 @@
 </template>
 
 <script>
+import { get } from 'lodash'
 import Hero from '@/store/modules/hero/model'
+import User from '@/store/modules/user/model'
 import AuthCardsComp from '@/views/pages/auth/components/cards'
-import { MainRoute } from '@/constants/router'
 import DefaultLayout from '@/views/layouts/page'
+import { MainRoute } from '@/constants/router'
+import { saveUserLogin } from '@/helpers/auth'
 
 export default {
   name: 'AuthPage',
@@ -17,22 +20,29 @@ export default {
     DefaultLayout,
     AuthCardsComp
   },
-  mounted () {
-    this.fetchHeroes()
-  },
   computed: {
     heroes () {
       return Hero.all()
+    },
+    getUser () {
+      return User.query().first()
     }
   },
+  created () {
+    if (get(this, 'getUser.hero', false)) return this.$router.push(MainRoute)
+  },
   methods: {
-    async fetchHeroes () {
-      await Hero.api().get('/heroes')
-    },
     /**
      * Перейти на главную страницу
      */
-    toUser () {
+    async toUser (hero) {
+      await User.insert({
+        data: {
+          hero
+        }
+      })
+
+      saveUserLogin(JSON.stringify(hero))
       this.$router.push(MainRoute)
     }
   }

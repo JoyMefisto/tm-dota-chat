@@ -8,8 +8,7 @@
 </template>
 
 <script>
-import Heroes from '@/store/modules/hero/model'
-import Person from '@/store/modules/user/model'
+import Hero from '@/store/modules/hero/model'
 
 export default {
   name: 'AuthCardComp',
@@ -22,11 +21,9 @@ export default {
      * @param id
      */
     setHeroForAuth (id) {
-      const hero = Heroes.find(id)
+      const hero = Hero.find(id)
 
-      Person.create({ data: hero }).then(() => {
-        this.$emit('to:user')
-      })
+      this.$emit('to:user', hero)
     }
   }
 }
